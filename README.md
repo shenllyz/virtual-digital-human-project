@@ -7,5 +7,6 @@ Detect 468 Face Landmarks in Real-time | OpenCV Python |
 |:-|:-:|-:|
 |[VTuber-Python-Unity](https://github.com/mmmmmm44/VTuber-Python-Unity)|[mmmmmm44](https://github.com/mmmmmm44)|[LICENSE](https://github.com/mmmmmm44/VTuber-Python-Unity/blob/main/LICENSE)|
 |[VTuber_Unity](https://github.com/kwea123/VTuber_Unity)|[AI葵](https://github.com/kwea123)|[LICENSE](https://github.com/kwea123/VTuber_Unity/blob/master/LICENSE)|
+|[Facial-emotion-recognition-using-mediapipe](https://github.com/REWTAO/Facial-emotion-recognition-using-mediapipe)|[ REWTAO ](https://github.com/REWTAO)|[LICENSE](https://github.com/REWTAO/Facial-emotion-recognition-using-mediapipe/blob/main/LICENSE)|
  
  
