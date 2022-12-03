@@ -3,9 +3,6 @@ Main program to run the detection and TCP
 """
 
 from argparse import ArgumentParser
-import cv2
-import mediapipe as mp
-import numpy as np
 
 # for TCP connection with unity
 import socket
@@ -19,9 +16,10 @@ from stabilizer import Stabilizer
 
 # Miscellaneous detections (eyes/ mouth...)
 from facial_features import *
-
 import sys
-
+import Emotion_Detector
+import csv
+from unity.keypoint_classifier import KeyPointClassifier
 # global variable
 #port = 11451         # have to be same as unity
 
@@ -70,8 +68,22 @@ def print_debug_msg(args):
     msg = '%.4f  ' * len(args) % args
     print(msg)
 
+
+
+
+
 def main():
-    threshold = 0.8
+    # Read emotion detector labels
+    with open('keypoint_classifier_label.csv',
+              encoding='utf-8-sig') as f:
+        keypoint_classifier_labels = csv.reader(f)
+        keypoint_classifier_labels = [
+            row[0] for row in keypoint_classifier_labels
+        ]
+
+    keypoint_classifier = KeyPointClassifier()
+
+    threshold = 1
     static_frame = [0, 0, 0]
     file = "F:\\desktop\\vtuber\\20221031234646.mp4"
     cap = cv2.VideoCapture(0)
@@ -129,7 +141,7 @@ def main():
         # 3. estimate pose
 
         # first two steps
-        img_facemesh, faces = detector.findFaceMesh(img)
+        img_facemesh, faces,emoID = detector.findFaceMesh(img)  #emoID: 1-happy 2-neutral 3-sad 4-surprise 5-angray
 
         # flip the input image so that it matches the facemesh stuff
         img = cv2.flip(img, 1)
@@ -150,6 +162,8 @@ def main():
 
             # The third step: pose estimation
             # pose: [[rvec], [tvec]]
+
+
             pose = pose_estimator.solve_pose_by_all_points(image_points)
 
             x_ratio_left, y_ratio_left = FacialFeatures.detect_iris(image_points, iris_image_points, Eyes.LEFT)
@@ -226,6 +240,8 @@ def main():
             else:
                 yaw = static_frame[2]
 
+
+
             # if (abs(roll - static_frame[0]) > threshold and abs(pitch - static_frame[1]) > threshold and abs(yaw - static_frame[2]) > threshold ):
             #     static_frame[0] = roll
             #     static_frame[1] = pitch
@@ -238,7 +254,7 @@ def main():
             # print("left eye: %.2f, %.2f; right eye %.2f, %.2f"
             #     % (steady_pose_eye[0], steady_pose_eye[1], steady_pose_eye[2], steady_pose_eye[3]))
             #print("EAR_LEFT: %.2f; EAR_RIGHT: %.2f" % (ear_left, ear_right))
-            print("MAR: %.2f;  Mouth Distance: %.2f;  ratio: %.2f " % (mar, steady_mouth_dist,ratio))
+            #print("MAR: %.2f;  Mouth Distance: %.2f;  ratio: %.2f " % (mar, steady_mouth_dist,ratio))
 
             # send info to unity
             if args.connect:
@@ -247,21 +263,25 @@ def main():
                 send_info_to_unity(socket,
                     (roll, pitch, yaw,
                     ear_left, ear_right, x_ratio_left, y_ratio_left, x_ratio_right, y_ratio_right,
-                    mar, steady_mouth_dist,ratio)
+                    mar, steady_mouth_dist,ratio,emoID)
                 )
 
             # print the sent values in the terminal
             if args.debug:
                 print_debug_msg((roll, pitch, yaw,
                         ear_left, ear_right, x_ratio_left, y_ratio_left, x_ratio_right, y_ratio_right,
-                        mar, mouth_distance,ratio))
+                        mar, mouth_distance,ratio,emoID))
 
 
-            # pose_estimator.draw_annotation_box(img, pose[0], pose[1], color=(255, 128, 128))
+            #pose_estimator.draw_annotation_box(img, pose[0], pose[1], color=(255, 128, 128))
 
-            # pose_estimator.draw_axis(img, pose[0], pose[1])
+            #pose_estimator.draw_axis(img, pose[0], pose[1])
 
             pose_estimator.draw_axes(img_facemesh, steady_pose[0], steady_pose[1])
+
+
+
+
 
         else:
             # reset our pose estimator
