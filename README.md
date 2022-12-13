@@ -3,8 +3,8 @@ virtual digital human project using Mediapipe and Unitychan
 # Workflow
 1. Real-time capture of facial landmarks  based on MediaPipe
 2. Real-time Head Pose Estimation based on the facial landmarks
-3.Facial expression recognition based on the facial landmarks
-4.Real-time data transmission to virtual human model based on TCP 
+3. Facial expression recognition based on the facial landmarks
+4. Real-time data transmission to virtual human model based on TCP 
 5. Drive the virtual human model based on the transmission data
 
 # References/ Credits
