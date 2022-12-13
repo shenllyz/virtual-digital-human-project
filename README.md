@@ -17,11 +17,4 @@ Detect 468 Face Landmarks in Real-time | OpenCV Python |
 |[Facial-emotion-recognition-using-mediapipe](https://github.com/REWTAO/Facial-emotion-recognition-using-mediapipe)|[ REWTAO ](https://github.com/REWTAO)|[LICENSE](https://github.com/REWTAO/Facial-emotion-recognition-using-mediapipe/blob/main/LICENSE)|
  
  
-$$
-\begin{aligned}
-P(\text{disease}|\text{positive}) &= \frac{P(\text{positive}|\text{disease}) \cdot P(\text{disease})}{P(\text{positive})} \
-&= \frac{0.99 \cdot 0.0001}{0.99 \cdot 0.0001 + 0.01 \cdot 0.9999} \
-&= \frac{0.00099}{0.010098} \
-&= 0.098
-\end{aligned}
-$$
+ 
