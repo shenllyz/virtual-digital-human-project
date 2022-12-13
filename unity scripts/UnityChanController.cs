@@ -52,6 +52,7 @@ public class UnityChanController : MonoBehaviour, ISaveable
     private float mar = 0;
     private float mdst = 0;
     private float head_ratio_mdst = 0;
+    private float emoID = 2; //2 = neutral
     // Start is called before the first frame update
     void Start()
     {
@@ -114,6 +115,7 @@ public class UnityChanController : MonoBehaviour, ISaveable
                             mar = float.Parse(res[9]);
                             mdst = float.Parse(res[10]);
                             head_ratio_mdst =  float.Parse(res[11]);
+                            emoID = float.Parse(res[12]);
                         }
                     }
                 }
@@ -130,7 +132,7 @@ public class UnityChanController : MonoBehaviour, ISaveable
         HeadRotation();
 
         // disable the eye blinking control by the user if AutoBlink script is running
-        if (!isAutoBlinkActive)
+        if (!isAutoBlinkActive && !(emoID ==1)&&!(emoID == 0))
             EyeBlinking();
 
         MouthMoving();
@@ -138,15 +140,46 @@ public class UnityChanController : MonoBehaviour, ISaveable
     }
 
     void FaceExpression()
-    { 
-        if (head_ratio_mdst < 3.2f )
+    {
+        if (emoID == 1 && head_ratio_mdst <= 2.8f)
         {
             anim.SetLayerWeight(1, 1f);
             anim.CrossFade("smile1@unitychan", 0.1f);
-        }else{
+        }
+        else if (head_ratio_mdst < 3.15f && head_ratio_mdst > 2.8f )
+        {
             anim.SetLayerWeight(1, 1f);
-            anim.CrossFade("default@unitychan", 0.1f);
-            
+            //anim.CrossFade("default@unitychan", 0.1f);
+            anim.CrossFade("smile2@unitychan", 0.1f);
+        }
+        else if (emoID == 4 && mar > 0.7f)
+        {
+            anim.SetLayerWeight(1, 1f);
+            anim.CrossFade("SURPRISE", 0.1f);
+        }
+        else if (emoID == 3 && head_ratio_mdst > 3.2f)
+        {
+            anim.SetLayerWeight(1, 1f);
+            anim.CrossFade("conf@unitychan", 0.1f);
+
+        }
+        else if (emoID == 0 && mar < 0.1f)
+        {
+            anim.SetLayerWeight(1, 1f);
+            anim.CrossFade("angry1@unitychan", 0.1f);
+        }
+        else if (emoID == 0 && mar >= 0.1f)
+        {
+            anim.SetLayerWeight(1, 1f);
+            anim.CrossFade("angry2@unitychan", 0.1f);
+        }
+        else
+        {
+            anim.SetLayerWeight(1, 1f);
+            anim.CrossFade("MTH_I", 0.1f);
+             
+            //anim.CrossFade("default@unitychan", 0.1f);
+
         }
     }
 
