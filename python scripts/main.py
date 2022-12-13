@@ -29,7 +29,7 @@ def init_TCP():
     port = 11451
     #port = args.port
 
-    # '127.0.0.1' = 'localhost' = your computer internal data transmission IP
+
     address = ('localhost', port)
     print(address)
     # address = ('192.168.0.107', port)
@@ -82,7 +82,8 @@ def main():
         ]
 
     keypoint_classifier = KeyPointClassifier()
-
+    count =0
+    static_emoID=2
     threshold = 1
     static_frame = [0, 0, 0]
     file = "F:\\desktop\\vtuber\\20221031234646.mp4"
@@ -209,6 +210,7 @@ def main():
             mouth_dist_stabilizer.update([mouth_distance])
             steady_mouth_dist = mouth_dist_stabilizer.state[0]
 
+
             # uncomment the rvec line to check the raw values
             #print("rvec steady (x, y, z) = (%f, %f, %f): " % (steady_pose[0][0], steady_pose[0][1], steady_pose[0][2]))
             #print("tvec steady (x, y, z) = (%f, %f, %f): " % (steady_pose[1][0], steady_pose[1][1], steady_pose[1][2]))
@@ -221,6 +223,7 @@ def main():
             roll = np.clip(np.degrees(steady_pose[0][1]), -50, 90)
             pitch = np.clip(-(180 + np.degrees(steady_pose[0][0])), -20, 90)
             yaw =  np.clip(np.degrees(steady_pose[0][2]), -50, 70)
+
 
 
 
@@ -241,6 +244,25 @@ def main():
                 yaw = static_frame[2]
 
 
+            #IF the emotion detected changed for continuous upcoming frames ,then update the emoID
+            if (emoID != static_emoID and count < 5):  #for continuous 5 frames the emoID are the same, then update emoID
+                count = count + 1
+                emoID = static_emoID
+            else:
+                static_emoID = emoID
+                count = 0
+
+
+
+            ear_left = steady_pose_eye[0]
+            ear_right = steady_pose_eye[1]
+            x_ratio_left = steady_pose_eye[2]
+            y_ratio_left = steady_pose_eye[3]
+            x_ratio_right = steady_pose_eye[4]
+            y_ratio_right = steady_pose_eye[5]
+
+            #print(mar)
+
 
             # if (abs(roll - static_frame[0]) > threshold and abs(pitch - static_frame[1]) > threshold and abs(yaw - static_frame[2]) > threshold ):
             #     static_frame[0] = roll
@@ -259,7 +281,7 @@ def main():
             # send info to unity
             if args.connect:
 
-                # for sending to live2d model (Hiyori)
+
                 send_info_to_unity(socket,
                     (roll, pitch, yaw,
                     ear_left, ear_right, x_ratio_left, y_ratio_left, x_ratio_right, y_ratio_right,
