@@ -6,7 +6,8 @@ virtual digital human project using Mediapipe and Unitychan
 3. Facial expression recognition based on the facial landmarks
 4. Real-time data transmission to virtual human model based on TCP 
 5. Drive the virtual human model based on the transmission data
-
+# Demo
+![Demo](https://github.com/shenllyz/virtual-digital-human-project/demo.gif)
 # References/ Credits
 
 Detect 468 Face Landmarks in Real-time | OpenCV Python | 
